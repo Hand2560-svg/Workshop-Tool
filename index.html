@@ -189,7 +189,7 @@ tbody tr:hover td{background:#FAFBFC}
 .irm{position:absolute;top:-6px;right:-6px;width:19px;height:19px;border-radius:50%;background:var(--rd);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--card)}
 
 /* ── THUMBS ── */
-.th{width:32px;height:32px;object-fit:cover;border-radius:5px;border:1px solid var(--bdr);cursor:pointer}.th:hover{opacity:.8}
+.th{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--bdr);cursor:pointer}.th:hover{opacity:.8}
 .throw{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
 
 /* ── DAMAGE CARDS ── */
@@ -274,7 +274,7 @@ tbody tr:hover td{background:#FAFBFC}
     <select class="fsel" id="clFT" onchange="renderI()">
       <option value="">ประเภททั้งหมด</option>
       <option>เครื่องมือไฟฟ้า</option><option>เครื่องมือมือ</option>
-      <option>อุปกรณ์เครื่องจักร</option><option>อุปกรณ์ความปลอดภัย</option><option>อื่นๆ</option>
+      <option>เครื่องจักร</option><option>อุปกรณ์ความปลอดภัย</option><option>อื่นๆ</option>
     </select>
     <select class="fsel" id="clFO" onchange="renderI()"><option value="">ผู้รับผิดชอบทั้งหมด</option></select>
     <button class="btn bg ml" style="font-size:12px" onclick="clearCal()"><i class="ti ti-calendar-x" aria-hidden="true"></i> ล้างวันที่</button>
@@ -287,6 +287,18 @@ tbody tr:hover td{background:#FAFBFC}
             <button class="cal-nbtn" onclick="calMv(-1)"><i class="ti ti-chevron-left"></i></button>
             <button class="cal-nbtn" onclick="calMv(1)"><i class="ti ti-chevron-right"></i></button>
           </div>
+        </div>
+        <!-- ค้นหาวัน/เดือน/ปี -->
+        <div style="display:flex;gap:5px;margin-bottom:10px">
+          <select id="calJD" style="flex:1;padding:5px 6px;font-size:12px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)" onchange="calJump()">
+            <option value="">วัน</option>
+          </select>
+          <select id="calJM" style="flex:1.4;padding:5px 6px;font-size:12px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)" onchange="calJump()">
+            <option value="">เดือน</option>
+          </select>
+          <select id="calJY" style="flex:1.4;padding:5px 6px;font-size:12px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)" onchange="calJump()">
+            <option value="">ปี</option>
+          </select>
         </div>
         <div class="cal-grid" id="calGrid"></div>
       </div>
@@ -325,7 +337,7 @@ tbody tr:hover td{background:#FAFBFC}
     <div class="tw">
       <table>
         <thead><tr>
-          <th style="width:28px">#</th><th>ชื่อเครื่องมือ</th><th style="width:160px">ประเภท</th><th style="width:80px;text-align:center">จำนวน (ea)</th><th style="width:80px">จัดการ</th>
+          <th style="width:28px">#</th><th>ชื่อเครื่องมือ</th><th style="width:160px">ประเภท</th><th style="width:80px;text-align:center">จำนวน (ea)</th><th style="width:90px">รูปภาพ</th><th style="width:80px">จัดการ</th>
         </tr></thead>
         <tbody id="toolBody"></tbody>
       </table>
@@ -452,7 +464,7 @@ tbody tr:hover td{background:#FAFBFC}
       <select id="tm-type" onchange="chkType()">
         <option value="เครื่องมือไฟฟ้า">🔌 เครื่องมือไฟฟ้า</option>
         <option value="เครื่องมือมือ">🔧 เครื่องมือมือ</option>
-        <option value="อุปกรณ์เครื่องจักร">⚙️ อุปกรณ์เครื่องจักร</option>
+        <option value="เครื่องจักร">⚙️ เครื่องจักร</option>
         <option value="อุปกรณ์ความปลอดภัย">🦺 อุปกรณ์ความปลอดภัย</option>
         <option value="อื่นๆ">📦 อื่นๆ (ระบุเพิ่มเติม)</option>
       </select>
@@ -461,6 +473,14 @@ tbody tr:hover td{background:#FAFBFC}
       </div>
     </div>
     <div class="fg"><label>จำนวน (ea)</label><input type="number" id="tm-qty" min="1" value="1"></div>
+    <div class="fg">
+      <label><i class="ti ti-photo" style="margin-right:4px"></i>รูปภาพเครื่องมือ</label>
+      <div class="uz" onclick="document.getElementById('tm-fi').click()">
+        <i class="ti ti-photo" aria-hidden="true"></i><div class="uz-t">คลิกเพื่อเลือกรูป</div><div class="uz-s">รองรับ JPG, PNG — เลือกได้หลายรูป</div>
+      </div>
+      <input type="file" id="tm-fi" accept="image/*" multiple style="display:none" onchange="handleImgs(this,'tm-ig','tmImgs')">
+      <div class="igrid" id="tm-ig"></div>
+    </div>
   </div>
   <div class="mft"><button class="btn bg" onclick="closeOv('ov-t')"><i class="ti ti-x"></i> ยกเลิก</button><button class="btn bp" onclick="saveT()"><i class="ti ti-device-floppy"></i> บันทึก</button></div>
 </div>
@@ -527,13 +547,13 @@ tbody tr:hover td{background:#FAFBFC}
    ─ ฟรี สูงสุด 1 GB / เดือน ─
 ══════════════════════════════════════════ */
 const firebaseConfig = {
-  apiKey: "AIzaSyCnKUw7SGw5SIGTBY10Iu9DK6dMxAedI3E",
-  authDomain: "workshop-tool-68e9a.firebaseapp.com",
-  databaseURL: "https://workshop-tool-68e9a-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "workshop-tool-68e9a",
-  storageBucket: "workshop-tool-68e9a.firebasestorage.app",
-  messagingSenderId: "240902399858",
-  appId: "1:240902399858:web:3ec52a8622b4b379711feb"
+  apiKey: "AIzaSyDemo-WorkshopApp-ReplaceThis",
+  authDomain: "workshop-demo.firebaseapp.com",
+  databaseURL: "https://workshop-tool-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "workshop-tool",
+  storageBucket: "workshop-tool.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:000000000000000000"
 };
 
 /* ── FALLBACK: ถ้า Firebase ยังไม่ได้ตั้งค่า ให้ใช้ localStorage แทน ── */
@@ -551,7 +571,7 @@ try {
 /* ══ LOCAL STATE ══ */
 let tools = [], inspects = [], damages = [];
 let editTid = null, ciV = null, dmV = null, selSev = 'medium';
-let ciImgs = [], ecNI = [], dmImgs = [];
+let ciImgs = [], ecNI = [], dmImgs = [], tmImgs = [];
 let calY, calM, calSel = null, dmFilter = 'all';
 let nid = Date.now();
 
@@ -573,7 +593,7 @@ function initFirebase() {
     tools = val ? Object.entries(val).map(([k,v]) => ({...v, _key: k})) : defaultTools();
     renderT(); buildSD('ciSD', ciV); buildSD('dmSD', dmV);
     if (document.getElementById('pg-inspect').classList.contains('on')) renderI();
-    hideLoading();
+    hideLoading(); initCalDropdowns();
   }, () => { useFirebase = false; loadLocal(); });
 
   // ── inspects ──
@@ -599,15 +619,7 @@ function setSyncStatus(on) {
 
 /* ══ LOCAL STORAGE FALLBACK ══ */
 function defaultTools() {
-  return [
-    {id:'t1',name:'หินเจียร 4 นิ้ว',type:'เครื่องมือไฟฟ้า',note:'',qty:5},
-    {id:'t2',name:'หินเจียร 7 นิ้ว',type:'เครื่องมือไฟฟ้า',note:'',qty:3},
-    {id:'t3',name:'เครื่องตัด Plasma',type:'เครื่องมือไฟฟ้า',note:'',qty:2},
-    {id:'t4',name:'เครื่องตัดแก๊ส',type:'เครื่องมือมือ',note:'',qty:4},
-    {id:'t5',name:'บล็อกไฟฟ้า',type:'เครื่องมือไฟฟ้า',note:'',qty:3},
-    {id:'t6',name:'ประแจปากตาย',type:'เครื่องมือมือ',note:'',qty:10},
-    {id:'t7',name:'เครื่องกลึง CNC',type:'อุปกรณ์เครื่องจักร',note:'3 แกน',qty:1},
-  ];
+  return [];
 }
 function loadLocal() {
   setSyncStatus(false);
@@ -658,7 +670,7 @@ function dbUpdate(path, data) {
 }
 
 /* ══ RENDER ALL ══ */
-function renderAll() { renderI(); renderT(); renderCal(); renderD(); }
+function renderAll() { renderI(); renderT(); renderCal(); renderD(); initCalDropdowns(); }
 
 /* ══ TABS ══ */
 function goTab(t, el) {
@@ -686,7 +698,7 @@ function renderStats() {
 
 /* ══ PILLS ══ */
 function tpill(t) {
-  const m = {'เครื่องมือไฟฟ้า':'elec','เครื่องมือมือ':'hand','อุปกรณ์เครื่องจักร':'mach','อุปกรณ์ความปลอดภัย':'safe'};
+  const m = {'เครื่องมือไฟฟ้า':'elec','เครื่องมือมือ':'hand','เครื่องจักร':'mach','อุปกรณ์ความปลอดภัย':'safe'};
   return `<span class="pill ${m[t]||'gray'}">${t}</span>`;
 }
 function stpill(s) {
@@ -720,8 +732,29 @@ function renderCal() {
   document.getElementById('calGrid').innerHTML=h;
 }
 function calSel2(ds) { calSel=(calSel===ds)?null:ds; renderCal(); renderI(); }
-function calMv(d) { calM+=d; if(calM>11){calM=0;calY++;} if(calM<0){calM=11;calY--;} renderCal(); }
+function calMv(d) { calM+=d; if(calM>11){calM=0;calY++;} if(calM<0){calM=11;calY--;} renderCal(); syncCalDropdowns(); }
 function clearCal() { calSel=null; renderCal(); renderI(); }
+function initCalDropdowns() {
+  const mn=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const mSel=document.getElementById('calJM'); mSel.innerHTML='<option value="">เดือน</option>'+mn.map((m,i)=>`<option value="${i}">${m}</option>`).join('');
+  const ySel=document.getElementById('calJY'); const now=new Date().getFullYear();
+  ySel.innerHTML='<option value="">ปี</option>'+Array.from({length:10},(_,i)=>now-5+i).map(y=>`<option value="${y}">${y+543}</option>`).join('');
+  syncCalDropdowns();
+}
+function syncCalDropdowns() {
+  const days=new Date(calY,calM+1,0).getDate();
+  const dSel=document.getElementById('calJD');
+  const prevDay=parseInt(dSel.value)||0;
+  dSel.innerHTML='<option value="">วัน</option>'+Array.from({length:days},(_,i)=>i+1).map(d=>`<option value="${d}">${d}</option>`).join('');
+  if(calSel){const p=calSel.split('-');dSel.value=parseInt(p[2]);document.getElementById('calJM').value=parseInt(p[1])-1;document.getElementById('calJY').value=parseInt(p[0]);}
+  else{document.getElementById('calJM').value=calM;document.getElementById('calJY').value=calY;if(prevDay&&prevDay<=days)dSel.value=prevDay;}
+}
+function calJump() {
+  const d=document.getElementById('calJD').value, m=document.getElementById('calJM').value, y=document.getElementById('calJY').value;
+  if(y!=='')calY=parseInt(y); if(m!=='')calM=parseInt(m);
+  renderCal();
+  if(d!==''&&m!==''&&y!==''){const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;calSel=ds;renderCal();renderI();}
+}
 
 /* ══ OWNER FILTER ══ */
 function updOwner() {
@@ -883,18 +916,23 @@ function renderT() {
     <td style="font-weight:600">${t.name}${t.note?`<span style="font-size:11px;color:var(--tx3);margin-left:6px">(${t.note})</span>`:''}</td>
     <td>${tpill(t.type)}</td>
     <td style="text-align:center;font-weight:600;font-family:'IBM Plex Mono',monospace">${t.qty}</td>
+    <td><div class="throw">${thumbs(t.imgs)}</div></td>
     <td><div style="display:flex;gap:4px">
       <button class="bico ed" onclick="openTM('${t._key||t.id}')" title="แก้ไข"><i class="ti ti-edit"></i></button>
       <button class="bico dl" onclick="delT('${t._key||t.id}')" title="ลบ"><i class="ti ti-trash"></i></button>
     </div></td>
-  </tr>`).join('') : `<tr><td colspan="5"><div class="empty"><i class="ti ti-search" aria-hidden="true"></i><p>ไม่พบเครื่องมือ</p></div></td></tr>`;
+  </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><i class="ti ti-search" aria-hidden="true"></i><p>ไม่พบเครื่องมือ</p></div></td></tr>`;
 }
 function openTM(key) {
-  editTid=key||null;
+  editTid=key||null; tmImgs=[];
   document.getElementById('tmTtl').textContent=key?'แก้ไขข้อมูลเครื่องมือ':'เพิ่มเครื่องมือใหม่';
+  document.getElementById('tm-ig').innerHTML='';
   if (key) {
     const t=tools.find(x=>(x._key||x.id)===key);
-    if (t) { document.getElementById('tm-name').value=t.name; document.getElementById('tm-type').value=t.type; document.getElementById('tm-qty').value=t.qty; document.getElementById('tm-note').value=t.note||''; chkType(); }
+    if (t) { document.getElementById('tm-name').value=t.name; document.getElementById('tm-type').value=t.type; document.getElementById('tm-qty').value=t.qty; document.getElementById('tm-note').value=t.note||'';
+      // show existing images
+      if(t.imgs&&t.imgs.length){const grid=document.getElementById('tm-ig');t.imgs.forEach((src,idx)=>{const w=document.createElement('div');w.className='ipw';const img=document.createElement('img');img.src=src;img.onclick=()=>openLbx(src);img.alt='preview';const rm=document.createElement('div');rm.className='irm';rm.innerHTML='<i class="ti ti-x" style="font-size:9px"></i>';rm.onclick=()=>{t.imgs.splice(idx,1);w.remove();};w.append(img,rm);grid.appendChild(w);});}
+      chkType(); }
   } else {
     document.getElementById('tm-name').value=''; document.getElementById('tm-qty').value=1;
     document.getElementById('tm-type').value='เครื่องมือไฟฟ้า'; document.getElementById('tm-note').value=''; chkType();
@@ -907,10 +945,11 @@ function saveT() {
   const type=document.getElementById('tm-type').value, note=type==='อื่นๆ'?document.getElementById('tm-note').value.trim():'', qty=parseInt(document.getElementById('tm-qty').value)||1;
   if (editTid) {
     const t=tools.find(x=>(x._key||x.id)===editTid);
-    if (useFirebase && db) { db.ref('tools/'+editTid).update({name,type,note,qty}); }
-    else { if(t)Object.assign(t,{name,type,note,qty}); saveLocal(); renderT(); }
+    const imgs=[...(t&&t.imgs||[]),...tmImgs];
+    if (useFirebase && db) { db.ref('tools/'+editTid).update({name,type,note,qty,imgs}); }
+    else { if(t)Object.assign(t,{name,type,note,qty,imgs}); saveLocal(); renderT(); }
   } else {
-    const rec={id:uid(),name,type,note,qty};
+    const rec={id:uid(),name,type,note,qty,imgs:tmImgs};
     if (useFirebase && db) { db.ref('tools').push(rec); }
     else { rec._key=rec.id; tools.push(rec); saveLocal(); renderT(); }
   }
@@ -988,7 +1027,7 @@ function delDM(key) {
 /* ══ IMAGES ══ */
 function handleImgs(inp,gridId,arrName) {
   const files=[...inp.files], grid=document.getElementById(gridId);
-  const arr=arrName==='ciImgs'?ciImgs:arrName==='ecNI'?ecNI:dmImgs;
+  const arr=arrName==='ciImgs'?ciImgs:arrName==='ecNI'?ecNI:arrName==='tmImgs'?tmImgs:dmImgs;
   files.forEach(f=>{const r=new FileReader();r.onload=e=>{const src=e.target.result;arr.push(src);const w=document.createElement('div');w.className='ipw';const img=document.createElement('img');img.src=src;img.onclick=()=>openLbx(src);img.alt='preview';const rm=document.createElement('div');rm.className='irm';rm.innerHTML='<i class="ti ti-x" style="font-size:9px"></i>';rm.onclick=()=>{const idx=arr.indexOf(src);if(idx>-1)arr.splice(idx,1);w.remove();};w.append(img,rm);grid.appendChild(w);};r.readAsDataURL(f);});inp.value='';
 }
 
